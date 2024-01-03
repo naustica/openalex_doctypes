@@ -3,12 +3,19 @@
 ## Taxonomie
 
 Erratum
+
 Editorial
+
 News
+
 Letter
+
 Review
+
 Article
+
 Funding info
+
 Other
 
 ## OpenAlex - Analyse 
