@@ -2,44 +2,34 @@
 
 ## Taxonomie
 
-Erratum
+Editorial discourses
 
-Editorial
-
-News
-
-Letter
-
-Review
-
-Article
-
-Funding info
+Research discourse
 
 Other
 
 ## OpenAlex - Analyse 
 
-Anhand der 15 Dokumententypen in OpenAlex können keine Reviews und News abgeleitet werden. 
+OpenAlex enthält 15 Dokumetentypen und 7 Publikationstypen.
 
 ## Vergleich mit anderen Datenbanken
 
 ### Pubmed
 
-Anahand der 79 Dokumententypen in Pubmed können alle Klassen abgeleitet werden.
+Pubmed enthält 79 Dokumententypen.
 
 ### Semantic Scholar
 
-Anhand der 12 Dokumententypen in Semantic Scholar können keine Errata und funding info abgeleitet werden. 
+Semantic Scholar enthält 12 Dokumententypen und 3 Publikationstypen.
 
 ### Crossef
 
-Anhand der 24 Dokumententypen in Crossref können keine Errata, Editorials, News, Letters und Reviews abgeleitet werden. 
+Crossref enthält 24 Dokumententypen.
 
 ### Scopus
 
-Anhand der 18 Dokumententypen in Web of Science können keine News und funding info abgeleitet werden. 
+Scopus enthält 18 Dokumententypen 8 Publikationstypen. 
 
 ### Web of Science
 
-Anhand der 42 Dokumententypen in Web of Science können keine funding info abgeleitet werden. 
+Web of Science enthält 42 Dokumententypen und 3 Publikationstypen.
