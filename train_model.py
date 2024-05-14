@@ -26,7 +26,7 @@ def page_counter(page_str):
     page_int = 1
     if '-' in str(page_str):
         try:
-            page_int = abs(eval(page_str))
+            page_int = int(abs(eval(page_str)))
         except:
             pass
         
@@ -43,10 +43,6 @@ df['has_abstract'] = df.abstract.apply(has_abstract)
 
 df = df[df['type'] != 'not assigned']
 df.drop(['abstract', 'page'], axis=1, inplace=True)
-df.where(df.author_count <= 5000, 5000, inplace=True)
-df.where(df.is_referenced_by_count <= 5000, 5000, inplace=True)
-df.where(df.references_count <= 5000, 5000, inplace=True)
-df.where(df.page_count <= 5000, 5000, inplace=True)
 df[['author_count', 'has_license', 'is_referenced_by_count',
     'references_count', 'has_funder', 'page_count', 'has_abstract']] = df[['author_count', 'has_license', 'is_referenced_by_count',
         'references_count', 'has_funder', 'page_count', 'has_abstract']].apply(pd.to_numeric)

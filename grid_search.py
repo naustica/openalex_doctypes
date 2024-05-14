@@ -26,7 +26,7 @@ def page_counter(page_str):
     page_int = 1
     if '-' in str(page_str):
         try:
-            page_int = abs(eval(page_str))
+            page_int = int(abs(eval(page_str)))
         except:
             pass
         
