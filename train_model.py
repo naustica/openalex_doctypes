@@ -55,6 +55,7 @@ df['title_word_length'] = df['title_word_length'].fillna(0)
 df['abstract_word_length'] = df['abstract_word_length'].fillna(0)
 
 df = df[df['type'] != 'not assigned']
+df = df[df['pm_grouptype'] != 'funding_info']
 df.drop(['pm_grouptype', 'abstract', 'page'], axis=1, inplace=True)
 
 df['type'] = df['type'].replace(to_replace='research_discourse', value=1)
@@ -74,6 +75,14 @@ df[['page_count',
                    'abstract_word_length', 
                    'type']].astype(int)
 
+df['author_count'] = df['author_count'].clip(upper=1000)
+df['is_referenced_by_count'] = df['is_referenced_by_count'].clip(upper=1000)
+df['references_count'] = df['references_count'].clip(upper=1000)
+df['title_string_length'] = df['title_string_length'].clip(upper=10000)
+df['abstract_string_length'] = df['abstract_string_length'].clip(upper=10000)
+df['title_word_length'] = df['title_word_length'].clip(upper=1000)
+df['abstract_word_length'] = df['abstract_word_length'].clip(upper=10000)
+
 df = df.reset_index(drop=True)
 
 X = df[['author_count', 'has_license', 'is_referenced_by_count',
@@ -86,13 +95,14 @@ y = df[['type']].values.ravel()
 X_train, X_test, y_train, y_test = train_test_split(X, 
                                                     y, 
                                                     stratify=y, 
-                                                    test_size=0.25, 
+                                                    test_size=0.2, 
                                                     random_state=42)
 
 clf = RandomForestClassifier(criterion='gini', 
                              max_depth=10, 
                              max_features='sqrt', 
                              n_estimators=200, 
+                             max_leaf_nodes=8,
                              n_jobs=-1,
                              random_state=42)
 clf.fit(X_train, y_train)

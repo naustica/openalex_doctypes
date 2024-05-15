@@ -86,7 +86,7 @@ y = df[['type']].values.ravel()
 X_train, X_test, y_train, y_test = train_test_split(X, 
                                                     y, 
                                                     stratify=y, 
-                                                    test_size=0.25, 
+                                                    test_size=0.2, 
                                                     random_state=42)
 
 clf = RandomForestClassifier(n_jobs=-1, random_state=42)
@@ -100,10 +100,9 @@ print(classification_report(y_test,
                             target_names=['editorial_discourse', 'research_discourse']))
  
 param_grid = {
-    'n_estimators': [200, 500],
-    'max_features': ['auto', 'sqrt', 'log2'],
-    'max_depth' : [8, 10, 12],
-    'criterion' :['gini', 'entropy']
+    'n_estimators': [50, 100, 200],
+    'max_depth': [8, 10, 12],
+    'max_leaf_nodes': [3, 6, 9]
 }
 
 cv_rfc = GridSearchCV(estimator=clf, n_jobs=-1, param_grid=param_grid, cv=5)
