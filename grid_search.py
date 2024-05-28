@@ -28,8 +28,8 @@ def page_counter(page_str):
     if '-' in str(page_str):
         try:
             page_int = int(abs(eval(page_str)))
-            if page_int > 1000:
-                page_int = 1000
+            if page_int > 5000:
+                page_int = 5000
         except:
             pass
         
@@ -44,17 +44,9 @@ def has_abstract(abstract_str):
 df['page_count'] = df.page.apply(page_counter)
 df['has_abstract'] = df.abstract.apply(has_abstract)
 
-df['title_word_length']  = df['title'].str.split().str.len()
-df['abstract_word_length']  = df['abstract'].str.split().str.len()
-df['title_string_length']  = df['title'].str.len()
-df['abstract_string_length']  = df['abstract'].str.len()
-
-df['title_string_length'] = df['title_string_length'].fillna(0)
-df['abstract_string_length'] = df['abstract_string_length'].fillna(0)
-df['title_word_length'] = df['title_word_length'].fillna(0)
-df['abstract_word_length'] = df['abstract_word_length'].fillna(0)
-
 df = df[df['type'] != 'not assigned']
+df = df[df['pm_grouptype'] != 'funding_info']
+df = df[df['pm_grouptype'] != 'other_53_types']
 df.drop(['pm_grouptype', 'abstract', 'page'], axis=1, inplace=True)
 
 df['type'] = df['type'].replace(to_replace='research_discourse', value=1)
@@ -62,31 +54,21 @@ df['type'] = df['type'].replace(to_replace='editorial_discourse', value=0)
 
 df[['page_count', 
     'has_abstract', 
-    'title_string_length', 
-    'abstract_string_length',
-    'title_word_length', 
-    'abstract_word_length', 
     'type']] = df[['page_count', 
                    'has_abstract', 
-                   'title_string_length', 
-                   'abstract_string_length', 
-                   'title_word_length', 
-                   'abstract_word_length', 
                    'type']].astype(int)
 
 df = df.reset_index(drop=True)
 
 X = df[['author_count', 'has_license', 'is_referenced_by_count',
         'references_count', 'has_funder', 'page_count', 
-        'has_abstract', 'title_string_length', 
-        'abstract_string_length', 'title_word_length', 
-        'abstract_word_length']].values
+        'has_abstract']].values
 y = df[['type']].values.ravel()
 
 X_train, X_test, y_train, y_test = train_test_split(X, 
                                                     y, 
                                                     stratify=y, 
-                                                    test_size=0.2, 
+                                                    test_size=0.25, 
                                                     random_state=42)
 
 clf = RandomForestClassifier(n_jobs=-1, random_state=42)
@@ -100,9 +82,9 @@ print(classification_report(y_test,
                             target_names=['editorial_discourse', 'research_discourse']))
  
 param_grid = {
-    'n_estimators': [50, 100, 200],
-    'max_depth': [8, 10, 12],
-    'max_leaf_nodes': [3, 6, 9]
+    'n_estimators': [50, 100, 200, 300],
+    'max_depth': [10, 12, 14, None],
+    'max_leaf_nodes': [9, 12, None]
 }
 
 cv_rfc = GridSearchCV(estimator=clf, n_jobs=-1, param_grid=param_grid, cv=5)

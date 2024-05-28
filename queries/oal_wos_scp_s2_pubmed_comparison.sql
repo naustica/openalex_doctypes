@@ -19,6 +19,7 @@ create table unignhaupka.oal_wos_scp_s2_pubmed_comparison_2012_22 as (
 			select lower(doi) as doi, item_type as wos_type
 			from wos_b_202307.v_items 
 			where source_type = 'Journal' and pubyear between 2012 and 2022
+            and ('SCI'=any(wos_ci) or 'SSCI'=any(wos_ci) or 'AHCI'=any(wos_ci))
 		),
 		s2 as (
 			select lower(doi) as doi, publicationtypes as s2_type
