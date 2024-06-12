@@ -19,14 +19,13 @@ create table unignhaupka.oal_wos_scp_s2_pubmed_comparison_2012_22 as (
 			select lower(doi) as doi, item_type as wos_type
 			from wos_b_202307.v_items 
 			where source_type = 'Journal' and pubyear between 2012 and 2022
-            and ('SCI'=any(wos_ci) or 'SSCI'=any(wos_ci) or 'AHCI'=any(wos_ci))
 		),
 		s2 as (
-			select lower(doi) as doi, publicationtypes as s2_type
-			from unignhaupka.s2_2023_09_26_papers_2000 as s2_items
-			left join unignhaupka.s2_2023_09_26_venues as s2_venues
-				on s2_items.publicationvenueid = s2_venues.id
-			where s2_venues.type = 'journal' and year between 2012 and 2022
+			select lower(externalids->>'DOI') as doi, publicationtypes as s2_type
+            from open_add_ons.s2_2023_09_26_papers as s2_items
+            left join open_add_ons.s2_2023_09_26_venues as s2_venues
+            	on s2_items.publicationvenueid = s2_venues.id
+            where s2_venues.type = 'journal' and year between 2012 and 2022
 		),
 		pm as (
 			select lower(doi) as doi, ptype as pm_type, ptype_group as pm_grouptype 
