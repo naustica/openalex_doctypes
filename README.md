@@ -11,7 +11,7 @@ Analysis of the Publication and Document Types in OpenAlex, Web of Science, Scop
 
 ## Analysis
 
-- [`Codebook.ipynb`](Codebook.ipynb) contains the exploration analysis of publication and document types
+- [`Codebook.ipynb`](Codebook.ipynb) contains the exploratory analysis of publication and document types
 - [`Characteristics.ipynb`](Characteristics.ipynb) contains the analysis of document types based on shared corpus
 
 - The [`queries/`](queries/) directory contains all SQL queries that were used during the analysis.
