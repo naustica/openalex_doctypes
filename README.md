@@ -7,7 +7,7 @@ This repository contains code used for the preprint:
 Nick Haupka, Jack H. Culbert, Alexander Schniedermann, Najko Jahn, Philipp Mayr. 2024.
 Analysis of the Publication and Document Types in OpenAlex, Web of Science, Scopus, Pubmed and Semantic Scholar
 
-arxiv.org/abs/2406.15154
+[arxiv.org/abs/2406.15154](https://arxiv.org/abs/2406.15154)
 
 ## Analysis
 
