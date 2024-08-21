@@ -1,1 +1,5 @@
 alluvial.py
+.ipynb_checkpoints
+datasets
+__pycache__
+model.pkl

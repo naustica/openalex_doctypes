@@ -1,16 +1,15 @@
 import pandas as pd
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import GridSearchCV
+from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report
-import re
 import pickle
 
 
-df = pd.read_csv('oal_dt_dataset.csv', 
-                 names=['doi', 'pm_grouptype', 'type', 'abstract', 
-                        'title', 'page', 'author_count', 
-                        'has_license', 'is_referenced_by_count',
-                        'references_count', 'has_funder'],
+df = pd.read_csv('oal_doc_dataset_extended_ex2.csv', 
+                 names=['doi', 'pm_grouptype', 'type', 'abstract', 'title', 'page', 'author_count',
+                          'has_license', 'is_referenced_by_count',
+                          'references_count', 'has_funder', 'country_count', 'inst_count', 'has_oa_url'],
                  dtype={'doi': str,
                         'pm_grouptype': str,
                         'type': str,
@@ -21,15 +20,25 @@ df = pd.read_csv('oal_dt_dataset.csv',
                         'has_license': int,
                         'is_referenced_by_count': int,
                         'references_count': int,
-                        'has_funder': int
+                        'has_funder': int,
+                        'country_count': int,
+                        'inst_count': int,
+                        'has_oa_url': int
                  }, sep=',', quotechar='"', header=0)
+
+df_publisher = pd.read_csv('datasets/cr_publisher.csv', sep=',')
 
 def page_counter(page_str):
     page_int = 1
     if '-' in str(page_str):
         try:
+            page_str = re.sub(r'(\.e)[\d]*', '', page_str)
+            page_str = re.sub(r'(\.)[\d]*', '', page_str)
+            page_str = re.sub(r'(?<=\d)(e)(\d)*', '', page_str)
             page_str = re.sub('[^\d-]', '', page_str)
             page_int = int(abs(eval(page_str)))
+            if page_int != 1:
+                page_int += 1
             if page_int > 5000:
                 page_int = 5000
         except:
@@ -46,10 +55,10 @@ def has_abstract(abstract_str):
 df['page_count'] = df.page.apply(page_counter)
 df['has_abstract'] = df.abstract.apply(has_abstract)
 
+df['title_word_length'] = df['title'].str.split().str.len()
+df['title_word_length'] = df['title_word_length'].fillna(0)
+
 df = df[df['type'] != 'not assigned']
-df = df[df['pm_grouptype'] != 'funding_info']
-df = df[df['pm_grouptype'] != 'other_53_types']
-df.drop(['pm_grouptype', 'abstract', 'page'], axis=1, inplace=True)
 
 df['type'] = df['type'].replace(to_replace='research_discourse', value=1)
 df['type'] = df['type'].replace(to_replace='editorial_discourse', value=0)
@@ -62,9 +71,15 @@ df[['page_count',
 
 df = df.reset_index(drop=True)
 
+df_with_publisher = df.merge(df_publisher, on=['doi'])
+df_pub_n = df_with_publisher.groupby(['publisher'])['doi'].count().reset_index().sort_values(by=['doi'], ascending=False)
+df_pub_n.columns = ['publisher', 'n']
+df_pub_n = df_pub_n[df_pub_n.n > 5000]
+df = df_with_publisher.merge(df_pub_n, on=['publisher'])
+
 X = df[['author_count', 'has_license', 'is_referenced_by_count',
-        'references_count', 'has_funder', 'page_count', 
-        'has_abstract']].values
+        'references_count', 'has_funder', 'page_count', 'has_abstract', 
+        'title_word_length', 'inst_count']].values
 y = df[['type']].values.ravel()
 
 X_train, X_test, y_train, y_test = train_test_split(X, 
@@ -73,20 +88,16 @@ X_train, X_test, y_train, y_test = train_test_split(X,
                                                     test_size=0.25, 
                                                     random_state=42)
 
-clf = RandomForestClassifier(criterion='gini', 
-                             max_depth=None, 
-                             max_features='sqrt', 
-                             n_estimators=200, 
-                             n_jobs=-1,
-                             random_state=42)
-clf.fit(X_train, y_train)
+knn = KNeighborsClassifier(n_neighbors=50, weights='uniform', leaf_size=40, p=1, n_jobs=-1)
+knn.fit(X_train, y_train)
 
-y_pred = clf.predict(X_test)
+y_pred = knn.predict(X_test)
 
 print(classification_report(y_test, 
                             y_pred, 
                             zero_division=1, 
-                            target_names=['editorial_discourse', 'research_discourse']))
+                            target_names=['editorial_discourse', 
+                                          'research_discourse']))
 
 with open('model.pkl', 'wb') as f:
     pickle.dump(clf, f)
