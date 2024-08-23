@@ -11,4 +11,4 @@
 
 module load python
 
-python3 document_types_make_snapshot.py
+python3 document_types_make_snapshot_openalex.py
