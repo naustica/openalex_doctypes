@@ -12,6 +12,9 @@ model_path = '/usr/users/haupka/model.pkl'
 input_directory = '/scratch/users/haupka/openalex-snapshot/data/works'
 output_directory = '/scratch/users/haupka/openalex_document_types'
 
+model_file = open(model_path, 'rb')
+model = pickle.load(model_file)
+
 def page_counter(page_str) -> int:
     page_int = 1
     if '-' in str(page_str):
@@ -40,15 +43,23 @@ def get_label(proba: float) -> str:
 def transform_file(input_file_path: str, output_file_path: str) -> None:
     new_data = []
 
-    with open(model_path, 'rb') as model_file:
-        model = pickle.load(model_file)
+    with gzip.open(input_file_path, 'r') as file:
+        for line in file:
 
-        with gzip.open(input_file_path, 'r') as file:
-            for line in file:
-    
-                new_item = json.loads(line)
-                if isinstance(new_item, dict):
-                    doi = new_item.get('doi')
+            new_item = json.loads(line)
+            if isinstance(new_item, dict):
+
+                source_type = None
+
+                primary_location = new_item.get('primary_location')
+                if primary_location:
+                    source = primary_location.get('source')
+                    if source:
+                        source_type = source.get('type')
+
+                if source_type == 'journal':
+                
+                    openalex_id = new_item.get('id')
                     authors = new_item.get('authorships')
                     has_license = bool(new_item.get('license'))
                     is_referenced_by_count = new_item.get('cited_by_count')
@@ -60,11 +71,8 @@ def transform_file(input_file_path: str, output_file_path: str) -> None:
                     title = new_item.get('title')
                     inst_count = new_item.get('institutions_distinct_count')
                     has_oa_url = bool(new_item.get('open_access').get('is_oa'))
-    
-    
-                    if doi:
-                        doi = doi.lstrip('https://doi.org/')
-                        
+                    source = new_item.get('primary_location').get('source').get('type')
+                    
                     if authors:
                         author_count = len(authors)
                     else:
@@ -74,7 +82,7 @@ def transform_file(input_file_path: str, output_file_path: str) -> None:
                         references_count = len(references_works)
                     else:
                         references_count = 0
-
+    
                     if first_page:
                         if last_page:
                             page_count = page_counter(str(first_page) + '-' + str(last_page))
@@ -87,7 +95,7 @@ def transform_file(input_file_path: str, output_file_path: str) -> None:
                         title_word_length = len(title.split())
                     else:
                         title_word_length = 0
-
+    
                     if not inst_count:
                         inst_count = 0
                         
@@ -107,9 +115,12 @@ def transform_file(input_file_path: str, output_file_path: str) -> None:
     
                     label = get_label(proba)
     
-                    new_data.append(dict(doi=doi, label=label, proba=proba))
-    
-            write_file(new_data, output_file_path)
+                    new_data.append(dict(openalex_id=openalex_id, label=label, proba=proba))
+
+                else:
+                    continue
+
+        write_file(new_data, output_file_path)
 
 
 def write_file(data, output_file_path: str) -> None:
