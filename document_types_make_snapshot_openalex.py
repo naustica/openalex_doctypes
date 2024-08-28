@@ -57,7 +57,11 @@ def transform_file(input_file_path: str, output_file_path: str) -> None:
                     if source:
                         source_type = source.get('type')
 
-                if source_type == 'journal':
+                item_type = new_item.get('type')
+
+
+                if source_type == 'journal' and item_type in ['article', 'review']:
+
                 
                     openalex_id = new_item.get('id')
                     authors = new_item.get('authorships')
@@ -71,7 +75,6 @@ def transform_file(input_file_path: str, output_file_path: str) -> None:
                     title = new_item.get('title')
                     inst_count = new_item.get('institutions_distinct_count')
                     has_oa_url = bool(new_item.get('open_access').get('is_oa'))
-                    source = new_item.get('primary_location').get('source').get('type')
                     
                     if authors:
                         author_count = len(authors)
@@ -116,9 +119,6 @@ def transform_file(input_file_path: str, output_file_path: str) -> None:
                     label = get_label(proba)
     
                     new_data.append(dict(openalex_id=openalex_id, label=label, proba=proba))
-
-                else:
-                    continue
 
         write_file(new_data, output_file_path)
 
