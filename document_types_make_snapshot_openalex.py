@@ -15,7 +15,7 @@ output_directory = '/scratch/users/haupka/openalex_document_types'
 model_file = open(model_path, 'rb')
 model = pickle.load(model_file)
 
-def page_counter(page_str) -> int:
+def page_counter(page_str: str) -> int:
     page_int = 1
     if '-' in str(page_str):
         try:
@@ -62,7 +62,7 @@ def transform_file(input_file_path: str, output_file_path: str) -> None:
 
                 if source_type == 'journal' and item_type in ['article', 'review']:
 
-                
+                    doi = new_item.get('doi')
                     openalex_id = new_item.get('id')
                     authors = new_item.get('authorships')
                     has_license = bool(new_item.get('license'))
@@ -75,6 +75,9 @@ def transform_file(input_file_path: str, output_file_path: str) -> None:
                     title = new_item.get('title')
                     inst_count = new_item.get('institutions_distinct_count')
                     has_oa_url = bool(new_item.get('open_access').get('is_oa'))
+
+                    if doi:
+                        doi = doi.lstrip('https://doi.org/')
                     
                     if authors:
                         author_count = len(authors)
@@ -118,14 +121,17 @@ def transform_file(input_file_path: str, output_file_path: str) -> None:
     
                     label = get_label(proba)
     
-                    new_data.append(dict(openalex_id=openalex_id, label=label, proba=proba))
+                    new_data.append(dict(openalex_id=openalex_id, 
+                                         doi=doi,
+                                         label=label, 
+                                         proba=proba))
 
         write_file(new_data, output_file_path)
 
 
 def write_file(data, output_file_path: str) -> None:
 
-    with gzip.open(output_file_path + '/' + str(uuid.uuid4()) + '.gz', 'w') as output_file:
+    with gzip.open(output_file_path, 'w') as output_file:
         result = [json.dumps(record, ensure_ascii=False).encode('utf-8') for record in data]
         for line in result:
             output_file.write(line + bytes('\n', encoding='utf8'))
@@ -139,7 +145,7 @@ def transform_snapshot(max_workers: int = cpu_count()) -> None:
             if os.path.isdir(input_directory + '/' + directory):
                 os.makedirs(output_directory + '/' + directory, exist_ok=True)
                 for input_file in os.listdir(input_directory + '/' + directory):
-                    output_file_path = os.path.join(output_directory + '/' + directory)
+                    output_file_path = os.path.join(output_directory + '/' + directory + os.path.basename(input_file) + 'l.gz')
                     future = executor.submit(transform_file,
                                              input_file_path=input_directory + '/' + directory + '/' + input_file,
                                              output_file_path=output_file_path)
