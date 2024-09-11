@@ -32,6 +32,10 @@ create table unignhaupka.oal_doc_dataset_extended as (
                else 1
            end as country_count,
            case
+               when inst_count_t.inst_count > 0 then inst_count_t.inst_count
+               else 1
+           end as inst_count,
+           case
                when oal_works.oa_url is not null then 1
                else 0
            end has_oa_url
@@ -40,4 +44,13 @@ create table unignhaupka.oal_doc_dataset_extended as (
         on lower(owsspc.doi) = lower(co.doi)
     join fiz_openalex_bdb_20240427.items oal_works
         on lower(owsspc.doi) = lower(oal_works.doi)
+    join (
+    	select w.doi, count(wa.institution_id) as inst_count
+		from fiz_openalex_rep_20240427.works w 
+		join fiz_openalex_rep_20240427.works_authorships wa 
+			on w.id = wa.work_id 
+		where w.publication_year between 2012 and 2022
+		group by w.doi 
+    ) as inst_count_t
+		on lower(owsspc.doi) = lower(trim('https://doi.org/' from inst_count_t.doi))
 )

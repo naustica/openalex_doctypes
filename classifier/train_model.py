@@ -3,9 +3,10 @@ from sklearn.model_selection import GridSearchCV
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report
+import pickle
 
 
-df = pd.read_csv('oal_doc_dataset_extended_ex2.csv', 
+df = pd.read_csv('oal_doc_dataset_extended.csv', 
                  names=['doi', 'pm_grouptype', 'type', 'abstract', 'title', 'page', 'author_count',
                           'has_license', 'is_referenced_by_count',
                           'references_count', 'has_funder', 'country_count', 'inst_count', 'has_oa_url'],
@@ -87,20 +88,16 @@ X_train, X_test, y_train, y_test = train_test_split(X,
                                                     test_size=0.25, 
                                                     random_state=42)
 
-knn = KNeighborsClassifier(n_jobs=-1)
+knn = KNeighborsClassifier(n_neighbors=50, weights='uniform', leaf_size=40, p=1, n_jobs=-1)
 knn.fit(X_train, y_train)
 
 y_pred = knn.predict(X_test)
- 
-param_grid = {
-    'n_neighbors': [40, 45, 50, 55, 60, 100, 200],
-    'weights': ['uniform'],
-    'algorithm': ['auto'],
-    'leaf_size': [30, 40, 50, 100],
-    'p': [1]
-}
 
-cv_knn = GridSearchCV(estimator=knn, n_jobs=-1, param_grid=param_grid, cv=5)
-cv_knn.fit(X_train, y_train)
+print(classification_report(y_test, 
+                            y_pred, 
+                            zero_division=1, 
+                            target_names=['editorial_discourse', 
+                                          'research_discourse']))
 
-print(cv_knn.best_params_)
+with open('model.pkl', 'wb') as f:
+    pickle.dump(clf, f)
