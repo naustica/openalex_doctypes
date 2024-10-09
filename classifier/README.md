@@ -1,4 +1,4 @@
-# Documentation about Document Type Classifier for OpenAlex
+# Document Type Classifier for OpenAlex
 
 ## Objective
 
