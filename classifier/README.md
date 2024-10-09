@@ -22,7 +22,7 @@
 - [`document_types_make_snapshot_openalex.py`](document_types_make_snapshot_openalex.py) contains code for predicting labels on a OpenAlex snapshot
 - [`make_snapshot.sh`](make_snapshot.sh) contains code for running predictions on the HPC of the GWDG Göttingen
 
-- [`create_table_oal_doctypes.sql`](create_table_oal_doctypes.sql): SQL statement to produce a table in the KB database
+- [`create_table_oal_doctypes.sql`](create_table_oal_doctypes.sql): SQL statement for producing a table in the KB database
 - [`json_posgres_oal_doctypes.sh`](json_posgres_oal_doctypes.sh): Load predictions into the KB infrastructure 
 
 
