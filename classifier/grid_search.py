@@ -76,9 +76,9 @@ df_pub_n.columns = ['publisher', 'n']
 df_pub_n = df_pub_n[df_pub_n.n > 5000]
 df = df_with_publisher.merge(df_pub_n, on=['publisher'])
 
-X = df[['author_count', 'has_license', 'is_referenced_by_count',
+X = df[['doi', 'author_count', 'has_license', 'is_referenced_by_count',
         'references_count', 'has_funder', 'page_count', 'has_abstract', 
-        'title_word_length', 'inst_count']].values
+        'title_word_length', 'inst_count', 'has_oa_url']].values
 y = df[['type']].values.ravel()
 
 X_train, X_test, y_train, y_test = train_test_split(X, 
