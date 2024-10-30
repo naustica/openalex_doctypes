@@ -28,7 +28,7 @@ df = pd.read_csv('oal_doc_dataset_extended.csv',
 
 df_publisher = pd.read_csv('datasets/cr_publisher.csv', sep=',')
 
-def page_counter(page_str):
+def page_counter(page_str: str) -> int:
     page_int = 1
     if '-' in str(page_str):
         try:
@@ -37,16 +37,13 @@ def page_counter(page_str):
             page_str = re.sub(r'(?<=\d)(e)(\d)*', '', page_str)
             page_str = re.sub('[^\d-]', '', page_str)
             page_int = int(abs(eval(page_str)))
-            if page_int != 1:
-                page_int += 1
-            if page_int > 5000:
-                page_int = 5000
+            page_int += 1
         except:
             pass
         
     return page_int
     
-def has_abstract(abstract_str):
+def has_abstract(abstract_str: str) -> int:
     if pd.isna(abstract_str):
         return 0
     else:

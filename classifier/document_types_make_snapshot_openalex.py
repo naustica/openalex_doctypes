@@ -24,19 +24,18 @@ def page_counter(page_str: str) -> int:
             page_str = re.sub(r'(?<=\d)(e)(\d)*', '', page_str)
             page_str = re.sub(r'[^\d-]', '', page_str)
             page_int = int(abs(eval(page_str)))
-            if page_int != 1:
-                page_int += 1
+            page_int += 1
         except:
             pass
 
     return page_int
 
-def get_label(proba: float) -> str:
+def get_label(proba: float) -> bool:
     if proba >= 0.5:
-        label = 'research_discourse'
+        label = True # 'research_discourse'
         return label
     else:
-        label = 'editorial_discourse'
+        label = False # 'editorial_discourse'
         return label
 
 
@@ -123,7 +122,7 @@ def transform_file(input_file_path: str, output_file_path: str) -> None:
     
                     new_data.append(dict(openalex_id=openalex_id, 
                                          doi=doi,
-                                         label=label, 
+                                         is_research=label, 
                                          proba=proba))
 
         write_file(new_data, output_file_path)

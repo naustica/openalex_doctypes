@@ -6,7 +6,7 @@
 
 ## Blog Post
 
-[Blog Post](https://subugoe.github.io/scholcomm_analytics/index.html)
+[Blog Post](https://subugoe.github.io/scholcomm_analytics/posts/oal_document_types_classifier/)
 
 ## Structure
 
