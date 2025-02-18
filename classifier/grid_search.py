@@ -95,7 +95,7 @@ classifier = LogisticRegression(random_state=42,
 param_grid_lr = {
     'penalty': ['l2'],
     'class_weight': ['balanced'],
-    'max_iter': [2000, 2500, 3000]
+    'max_iter': [2000, 2500, 3000, 4000]
 }
 
 cv_lr = GridSearchCV(estimator=classifier, n_jobs=-1, param_grid=param_grid_lr, cv=5)
@@ -112,7 +112,7 @@ param_grid_clf = {
     'max_depth': [None],
     'max_features': ['sqrt'],
     'class_weight': ['balanced'],
-    'n_estimators': [150, 200, 250]
+    'n_estimators': [100, 150, 200, 250]
 }
 
 cv_clf = GridSearchCV(estimator=clf, n_jobs=-1, param_grid=param_grid_clf, cv=5)
@@ -124,10 +124,10 @@ print(cv_clf.best_params_)
 knn = KNeighborsClassifier(n_jobs=-1)
 
 param_grid_knn = {
-    'n_neighbors': [40, 50, 60, 100, 200],
+    'n_neighbors': [20, 40, 50, 60, 100, 200],
     'weights': ['uniform'],
     'algorithm': ['auto'],
-    'leaf_size': [30, 40, 50, 100],
+    'leaf_size': [20, 30, 40, 50, 100],
     'p': [1]
 }
 
@@ -140,7 +140,7 @@ print(cv_knn.best_params_)
 abc = AdaBoostClassifier(random_state=42)
 
 param_grid_abc = {
-    'n_estimators': [20, 50, 100, 200],
+    'n_estimators': [20, 50, 100, 200, 300, 500],
     'algorithm': ['SAMME'],
     'learning_rate': [1]
 }
