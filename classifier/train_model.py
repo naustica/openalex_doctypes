@@ -27,7 +27,7 @@ df = pd.read_csv('oal_doc_dataset_extended.csv',
                         'has_oa_url': int
                  }, sep=',', quotechar='"', header=0)
 
-df_publisher = pd.read_csv('datasets/cr_publisher.csv', sep=',')
+df_publisher = pd.read_csv('cr_publisher.csv', sep=',')
 
 def page_counter(page_str: str) -> int:
     page_int = 1
@@ -58,8 +58,9 @@ df['title_word_length'] = df['title_word_length'].fillna(0)
 
 df = df[df['type'] != 'not assigned']
 
-df['type'] = df['type'].replace(to_replace='research_discourse', value=1)
-df['type'] = df['type'].replace(to_replace='editorial_discourse', value=0)
+df['type'] = df['type'].replace(to_replace='research_discourse', value='1')
+df['type'] = df['type'].replace(to_replace='editorial_discourse', value='0')
+df['type'] = df['type'].astype(int)
 
 df[['page_count', 
     'has_abstract', 
@@ -75,7 +76,7 @@ df_pub_n.columns = ['publisher', 'n']
 df_pub_n = df_pub_n[df_pub_n.n > 5000]
 df = df_with_publisher.merge(df_pub_n, on=['publisher'])
 
-X = df[['doi', 'author_count', 'has_license', 'is_referenced_by_count',
+X = df[['author_count', 'has_license', 'is_referenced_by_count',
         'references_count', 'has_funder', 'page_count', 'has_abstract', 
         'title_word_length', 'inst_count', 'has_oa_url']].values
 y = df[['type']].values.ravel()
