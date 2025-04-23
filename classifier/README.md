@@ -2,7 +2,7 @@
 
 ## Objective
 
-- Minimise the amount of incorrectly classified research publications in OpenAlex
+- Minimise the amount of misclassified research publications in OpenAlex
 
 ## Blog Post
 
