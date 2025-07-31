@@ -2,12 +2,17 @@
 
 ## Overview
 
-This repository contains code used for the preprint:
+This repository contains code used for the preprints:
 
 Nick Haupka, Jack H. Culbert, Alexander Schniedermann, Najko Jahn, Philipp Mayr. 2024.
 Analysis of the Publication and Document Types in OpenAlex, Web of Science, Scopus, Pubmed and Semantic Scholar
 
 [arxiv.org/abs/2406.15154](https://arxiv.org/abs/2406.15154)
+
+Nick Haupka. 2025.
+Presenting a classifier to detect research contributions in OpenAlex
+
+[arxiv.org/abs/2507.22479](https://arxiv.org/abs/2507.22479)
 
 ## Analysis
 
@@ -15,7 +20,9 @@ Analysis of the Publication and Document Types in OpenAlex, Web of Science, Scop
 - [`Characteristics.ipynb`](Characteristics.ipynb) contains the analysis of document types based on shared corpus
 
 - The [`queries/`](queries/) directory contains all SQL queries that were used during the analysis.
-- The [`media/`](media/) directory contains all images that were used for the manuscript.
+- The [`media/`](media/) directory contains all images that were used for comparison.
+
+- The [`classifier/`](classifier/) directory contains code used for the OpenAlex document type classifier.
 
 ## Acknowledgment
 
