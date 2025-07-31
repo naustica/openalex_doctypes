@@ -8,6 +8,10 @@
 
 [Blog Post](https://subugoe.github.io/scholcomm_analytics/posts/oal_document_types_classifier/)
 
+## Paper 
+
+[Paper](https://arxiv.org/abs/2507.22479)
+
 ## Structure
 
 - [`Classifier.ipynb`](Classifier.ipynb) contains code for training and evaluating the classifier
@@ -23,6 +27,8 @@
 - [`make_snapshot.sh`](make_snapshot.sh) contains code for running predictions on the HPC of the GWDG Göttingen
 
 - [`create_table_oal_doctypes.sql`](create_table_oal_doctypes.sql): SQL statement for producing a table in the KB database
-- [`json_posgres_oal_doctypes.sh`](json_posgres_oal_doctypes.sh): Load predictions into the KB infrastructure 
+- [`json_posgres_oal_doctypes.sh`](json_posgres_oal_doctypes.sh): Load predictions into the KB infrastructure
+
+- The [`paper/`](paper/) directory contains code used for the arXiv Preprint.
 
 
