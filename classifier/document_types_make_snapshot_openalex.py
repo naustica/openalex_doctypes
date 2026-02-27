@@ -3,7 +3,6 @@ import json
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from multiprocessing import cpu_count
 import os
-import uuid
 import pickle
 import re
 
@@ -65,10 +64,10 @@ def transform_file(input_file_path: str, output_file_path: str) -> None:
                     doi = new_item.get('doi')
                     openalex_id = new_item.get('id')
                     authors = new_item.get('authorships')
-                    has_license = bool(new_item.get('license'))
+                    has_license = bool(new_item.get('primary_location').get('license'))
                     is_referenced_by_count = new_item.get('cited_by_count')
                     references_works = new_item.get('referenced_works')
-                    has_funder = bool(new_item.get('grants'))
+                    has_funder = bool(new_item.get('funders'))
                     first_page = new_item.get('biblio').get('first_page')
                     last_page = new_item.get('biblio').get('last_page')
                     issue = new_item.get('biblio').get('issue')

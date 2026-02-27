@@ -83,7 +83,7 @@ y = df[['type']].values.ravel()
 X_train, X_test, y_train, y_test = train_test_split(X, 
                                                     y, 
                                                     stratify=y, 
-                                                    test_size=0.2,
+                                                    test_size=0.25,
                                                     random_state=42)
 
 knn = KNeighborsClassifier(n_neighbors=50, weights='uniform', leaf_size=30, p=1, n_jobs=-1)
